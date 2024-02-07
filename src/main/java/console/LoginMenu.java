@@ -1,11 +1,17 @@
-package Console;
+package console;
 
 import java.io.Console;
-import java.util.Scanner; // 1
+import java.util.Scanner;
 
+public class LoginMenu {
 
-public class Menu {
+    public LoginMenu () {
 
+    }
+
+    public void display(MenuContext menuContext) {
+
+    }
     public static void main(String[] args) {
 
         Scanner userInput = new Scanner(System.in);
@@ -42,5 +48,4 @@ public class Menu {
 
 
     }
-
 }
