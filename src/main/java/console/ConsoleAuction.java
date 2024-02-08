@@ -1,5 +1,9 @@
 package console;
 
+
+import models.User;
+
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class ConsoleAuction {
@@ -7,7 +11,9 @@ public class ConsoleAuction {
 
     public ConsoleAuction() {
         Scanner scanner = new Scanner(System.in);
-        menuContext = new MenuContext(scanner);
+        PrintStream out =  System.out;
+
+        menuContext = new MenuContext(scanner, out);
     }
 
     public void start () {
