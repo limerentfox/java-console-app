@@ -8,8 +8,9 @@ public class User {
     private final String organization;
     private final int id;
     private final Boolean isAdmin;
+    private Boolean isBlocked;
 
-    public User (String username, String firstName, String lastName, String password, String organization, int id, Boolean isAdmin) {
+    public User (String username, String firstName, String lastName, String password, String organization, int id, Boolean isAdmin, Boolean isBlocked) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -17,6 +18,7 @@ public class User {
         this.organization = organization;
         this.id = id;
         this.isAdmin = isAdmin;
+        this.isBlocked = isBlocked;
     }
 
     public String getUsername() {
@@ -39,6 +41,14 @@ public class User {
         return password;
     }
 
+    public Boolean getIsBlocked() {
+        return isBlocked;
+    }
+
+    public void setIsBlocked(Boolean value) {
+        isBlocked = value;
+    }
+
     public String getOrganization() {
         return organization;
     }
@@ -47,7 +57,7 @@ public class User {
         return id;
     }
 
-    public Boolean getAdmin() {
+    public Boolean getIsAdmin() {
         return isAdmin;
     }
 }

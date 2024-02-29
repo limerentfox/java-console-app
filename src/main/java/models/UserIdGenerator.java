@@ -1,6 +1,6 @@
-package console;
+package models;
 
-public class ConsoleMenu {
+public class UserIdGenerator {
     private static int nextId = 1;
 
     public static int generateUserId() {
@@ -10,12 +10,4 @@ public class ConsoleMenu {
     public static int getNextUserId() {
         return nextId;
     }
-
-    public static void resetIdGenerator() {
-        nextId = 1;
-    }
-
-
-
-
 }
