@@ -1,29 +1,39 @@
 package models;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class UserStore {
     private static Map<Integer, User> users = new HashMap<>();
+    private User currentUser;
 
-    public User getUser(Map<Integer, User> users, String username, String password) {
+    public User authenticateUser(String username, String password) {
+
         for (User user : users.values()) {
             if (this.validateUsername(user, username) && this.validatePassword(user, password)) {
                 return user;
             }
         }
 
-        return null; // Return null if user with given username is not found
+        return null;
     }
 
-    public User findByUsername(Map<Integer, User> users, String username) {
+    public User findByUsername(String username) {
         for (User user : users.values()) {
             if (this.validateUsername(user, username)) {
                 return user;
             }
         }
 
-        return null; // Return null if user with given username is not found
+        return null;
+    }
+
+
+    public void setCurrentUser(String username) {
+        this.currentUser = this.findByUsername(username);
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 
 
@@ -35,7 +45,7 @@ public class UserStore {
     public boolean validatePassword(User user, String password) {
         return user.getPassword().equals(password);
     }
-    public Map<Integer, User> getUsers() {
+    public Map<Integer, User> getAllUsers() {
         return users;
     }
 
@@ -48,4 +58,27 @@ public class UserStore {
     }
 
 
+    public Set<String> getUniqueOrganisations() {
+        Set<String> uniqueOrganizations = new HashSet<>();
+        List<User> users = new ArrayList<>(this.getAllUsers().values());
+
+        for (User user : users) {
+            String organisation = user.getOrganization();
+            uniqueOrganizations.add(organisation);
+        }
+
+       return uniqueOrganizations;
+    }
+
+
+   public Map<String, List<User>> getUsersByOrganisation() {
+        Map<String, List<User>> organizationUsersMap = new HashMap<>();
+        List<User> users = new ArrayList<>(this.getAllUsers().values());
+
+        for (User user : users) {
+            organizationUsersMap.computeIfAbsent(user.getOrganization(), k -> new ArrayList<>()).add(user);
+        }
+
+        return organizationUsersMap;
+    }
 }

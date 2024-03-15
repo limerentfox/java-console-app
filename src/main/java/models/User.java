@@ -5,20 +5,20 @@ public class User {
     private final String firstName;
     private final String lastName;
     private final String password;
-    private final String organization;
+    private final String organisation;
     private final int id;
     private final Boolean isAdmin;
     private Boolean isBlocked;
 
-    public User (String username, String firstName, String lastName, String password, String organization, int id, Boolean isAdmin, Boolean isBlocked) {
+    public User (int id, String username, String firstName, String lastName, String password, String organisation) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
-        this.organization = organization;
+        this.organisation = organisation;
         this.id = id;
-        this.isAdmin = isAdmin;
-        this.isBlocked = isBlocked;
+        this.isAdmin = organisation.equalsIgnoreCase("admin");
+        this.isBlocked = false;
     }
 
     public String getUsername() {
@@ -50,7 +50,7 @@ public class User {
     }
 
     public String getOrganization() {
-        return organization;
+        return organisation;
     }
 
     public int getId() {
@@ -59,5 +59,9 @@ public class User {
 
     public Boolean getIsAdmin() {
         return isAdmin;
+    }
+
+    public void setIsBlocked(boolean status) {
+        this.isBlocked = status;
     }
 }
