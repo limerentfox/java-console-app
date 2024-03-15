@@ -1,16 +1,17 @@
 package models;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+
 
 public class Bid {
-    private String bidder;
-    private String auctionSymbol;
-    private Integer auctionId;
-    private double price;
-    private int quantity;
-    private LocalDateTime submissionTime;
+    private final String bidder;
+    private final String auctionSymbol;
+    private final Integer auctionId;
+    private final double price;
+    private final int quantity;
+    private final Instant submissionTime;
 
-    public Bid(String bidder, String auctionSymbol, int auctionId, double price, int quantity, LocalDateTime submissionTime) {
+    public Bid(String bidder, String auctionSymbol, int auctionId, double price, int quantity, Instant submissionTime) {
         if (price <= 0 || quantity <= 0) throw new IllegalArgumentException("Invalid bid parameters.");
         this.bidder = bidder;
         this.auctionSymbol = auctionSymbol;
@@ -40,7 +41,7 @@ public class Bid {
         return price;
     }
 
-    public LocalDateTime getSubmissionTime() {
+    public Instant getSubmissionTime() {
         return submissionTime;
     }
 }

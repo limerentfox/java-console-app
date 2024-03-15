@@ -3,7 +3,7 @@ package models;
 import java.util.*;
 
 public class UserStore {
-    private static Map<Integer, User> users = new HashMap<>();
+    private static final Map<Integer, User> users = new HashMap<>();
     private User currentUser;
 
     public User authenticateUser(String username, String password) {

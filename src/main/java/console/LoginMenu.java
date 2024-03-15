@@ -7,10 +7,9 @@ import java.util.Scanner;
 public class LoginMenu {
     private final Scanner scanner;
     private final PrintStream out;
-    private final UserStore userStore; // Assumes a UserStore class that handles user storage and authentication
+    private final UserStore userStore;
     private final AuctionMenuManager auctionMenuManager;
     private final UserManagementMenu userManagementMenu;
-    private User currentUser;
 
     public LoginMenu(UserStore userStore, Scanner scanner, PrintStream out, AuctionManager auctionManager) {
         this.scanner = scanner;
@@ -49,11 +48,10 @@ public class LoginMenu {
         out.println(userStore.getAllUsers().values());
 
 
-        currentUser = userStore.authenticateUser(username, password);
+        User currentUser = userStore.authenticateUser(username, password);
         // reset default currentUser to actual user
         auctionMenuManager.setCurrentUser(currentUser);
         userStore.setCurrentUser(currentUser.getUsername());
-        userManagementMenu.setCurrentUser(currentUser);
 
         if (currentUser == null) {
             out.println("Username or password does not match our records. Please try again.");
@@ -130,8 +128,6 @@ public class LoginMenu {
         User defaultUser = userStore.findByUsername("admin");
         auctionMenuManager.setCurrentUser(defaultUser);
         userStore.setCurrentUser(defaultUser.getUsername());
-        userManagementMenu.setCurrentUser(defaultUser);
-
     }
 }
 

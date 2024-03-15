@@ -45,10 +45,6 @@ public class User {
         return isBlocked;
     }
 
-    public void setIsBlocked(Boolean value) {
-        isBlocked = value;
-    }
-
     public String getOrganization() {
         return organisation;
     }

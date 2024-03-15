@@ -11,7 +11,6 @@ public class UserManagementMenu {
     private final Scanner scanner;
     private final PrintStream out;
     private final UserStore userStore;
-    private User currentUser;
 
     public UserManagementMenu(Scanner scanner, PrintStream out, UserStore userStore) {
         this.scanner = scanner;
@@ -75,25 +74,23 @@ public class UserManagementMenu {
         String organisation = scanner.nextLine();
         int id = UserIdGenerator.generateUserId();
         User newUser = new User(id, username, firstName, lastName, password, organisation);
-        userStore.addUser(newUser); // Ensure addUser method exists and functions as expected
+        userStore.addUser(newUser);
         out.println("User created successfully.");
-    }
-
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
     }
 
     private void blockUser() {
         out.print("Enter username of user to block: ");
         String username = scanner.nextLine();
-        currentUser.setIsBlocked(true);
+        User userToBeBlocked = userStore.findByUsername(username);
+        userToBeBlocked.setIsBlocked(true);
         out.println("User blocked successfully.");
     }
 
     private void unblockUser() {
         out.print("Enter username of user to unblock: ");
         String username = scanner.nextLine();
-        currentUser.setIsBlocked(false);
+        User userToBeUnblocked = userStore.findByUsername(username);
+        userToBeUnblocked.setIsBlocked(false);
         out.println("User unblocked successfully.");
     }
 

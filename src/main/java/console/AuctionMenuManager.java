@@ -109,7 +109,7 @@ public class AuctionMenuManager {
         out.print("Enter quantity: ");
         int quantity = Integer.parseInt(scanner.nextLine());
 
-        auctionManager.placeBid(auctionManager.getCurrentUser().getUsername(), auctionSymbol,auctionId, price, quantity);
+        auctionManager.placeBid(getCurrentUser().getUsername(), auctionSymbol,auctionId, price, quantity);
     }
 
 

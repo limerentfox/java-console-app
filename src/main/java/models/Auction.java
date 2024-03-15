@@ -1,6 +1,6 @@
 package models;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -8,23 +8,21 @@ import java.util.stream.Collectors;
 
 public class Auction {
     private static int lastId = 0;
-    private int id;
-    private String symbol;
-    private int quantity;
-    private double minimumPrice;
+    private final int id;
+    private final String symbol;
+    private final int quantity;
+    private  final double minimumPrice;
     private boolean isOpen;
 
     // use a different type
-    private LocalDateTime closingTime;
-    private String owner;
-    private List<Bid> bids;
+    private Instant closingTime;
+    private final String owner;
+    private final List<Bid> bids;
 
     private AuctionSummary auctionSummary;
-
-//    private ClosingSummary closingSummary;
-                private List<Bid> winningBids = new ArrayList<>();
-                private double totalRevenue = 0;
-                private int totalSoldQuantity = 0;
+    private final List<Bid> winningBids = new ArrayList<>();
+    private double totalRevenue = 0;
+    private int totalSoldQuantity = 0;
 
     public Auction(String symbol, int quantity, double minimumPrice, String owner) {
         if (quantity < 0 || minimumPrice <= 0) throw new IllegalArgumentException("Invalid auction parameters.");
@@ -73,7 +71,7 @@ public class Auction {
         return winningBids;
     }
 
-    public LocalDateTime getClosingTime() {
+    public Instant getClosingTime() {
         return closingTime;
     }
 
@@ -85,7 +83,7 @@ public class Auction {
         if (!this.isOpen) return;
 
         this.isOpen = false;
-        this.closingTime = LocalDateTime.now();
+        this.closingTime = Instant.now();
 
         List<Bid> sortedBids = bids.stream()
                 .filter(bid -> bid.getPrice() >= this.minimumPrice)
@@ -121,20 +119,5 @@ public class Auction {
 
     public AuctionSummary getAuctionSummary() {
         return this.auctionSummary;
-    }
-
-    public void summarizeResults() {
-        if (this.isOpen) {
-            System.out.println("Auction is still open.");
-            return;
-        }
-
-        System.out.println("Auction " + this.symbol + " Summary:");
-        System.out.println("Total Revenue: " + totalRevenue);
-        System.out.println("Total Sold Quantity: " + totalSoldQuantity);
-        System.out.println("Winning Bids:");
-        for (Bid bid : winningBids) {
-            System.out.println("Bidder: " + bid.getBidder() + ", Price: " + bid.getPrice() + ", Quantity: " + bid.getQuantity());
-        }
     }
 }
