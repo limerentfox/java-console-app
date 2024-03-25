@@ -49,9 +49,7 @@ public class LoginMenu {
 
 
         User currentUser = userStore.authenticateUser(username, password);
-        // reset default currentUser to actual user
         auctionMenuManager.setCurrentUser(currentUser);
-        userStore.setCurrentUser(currentUser.getUsername());
 
         if (currentUser == null) {
             out.println("Username or password does not match our records. Please try again.");
@@ -87,7 +85,7 @@ public class LoginMenu {
                 case "2":
                     // Logout
                     out.println("Logging out...");
-                    this.resetCurrentUserToDefaultUser();
+                    this.resetCurrentUser();
                     running = false;
                     break;
                 default:
@@ -114,7 +112,7 @@ public class LoginMenu {
                 case "3":
                     // Logout
                     out.println("Logging out...");
-                    this.resetCurrentUserToDefaultUser();
+                    this.resetCurrentUser();
                     running = false;
                     break;
                 default:
@@ -124,10 +122,8 @@ public class LoginMenu {
         }
     }
 
-    private void resetCurrentUserToDefaultUser() {
-        User defaultUser = userStore.findByUsername("admin");
-        auctionMenuManager.setCurrentUser(defaultUser);
-        userStore.setCurrentUser(defaultUser.getUsername());
+    private void resetCurrentUser() {
+        auctionMenuManager.setCurrentUser(null);
     }
 }
 

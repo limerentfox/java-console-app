@@ -49,6 +49,7 @@ public class AuctionSummary {
     }
 
     // Method to summarize auction results for display
+    // move the responsibility of the strings into a helper class
     public String summarize() {
         StringBuilder summary = new StringBuilder();
         summary.append("Auction ID: ").append(auctionId)

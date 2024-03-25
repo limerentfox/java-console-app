@@ -8,6 +8,8 @@ public class AuctionMenuManager {
     private final Scanner scanner;
     private final PrintStream out;
     private final AuctionManager auctionManager;
+    private User currentUser;
+
 
     public AuctionMenuManager(Scanner scanner, PrintStream out, AuctionManager auctionManager) {
         this.scanner = scanner;
@@ -65,15 +67,15 @@ public class AuctionMenuManager {
         int quantity = Integer.parseInt(scanner.nextLine());
         out.print("Enter minimum price: ");
         double minimumPrice = Double.parseDouble(scanner.nextLine());
-        auctionManager.createAuction(symbol, quantity, minimumPrice);
+        auctionManager.createAuction(symbol, quantity, minimumPrice, currentUser);
         out.println("Auction created successfully.");
     }
 
     private void viewMyAuctions() {
-        out.println("\n" + auctionManager.getCurrentUser().getUsername());
+        out.println("\n" + currentUser.getUsername());
         out.println("\t=> Your Auctions\n===================================");
         auctionManager.getAuctions().values().stream()
-                .filter(auction -> auction.getOwner().equals(auctionManager.getCurrentUser().getUsername()))
+                .filter(auction -> auction.getOwner().equals(currentUser.getUsername()))
                 .forEach(auction -> {
                     out.println("Id: " + auction.getId() + "\nSymbol: " + auction.getSymbol() + "\nStatus: " + (auction.isOpen() ? "OPENED" : "CLOSED"));
                     auction.getBids()
@@ -85,18 +87,18 @@ public class AuctionMenuManager {
     private void closeAuction() {
         out.print("Enter the id of the auction to close: ");
         int auctionId = Integer.parseInt(scanner.nextLine());
-        auctionManager.closeAuction(auctionId);
+        auctionManager.closeAuction(auctionId, currentUser);
         Auction closedAuction = auctionManager.getAuctions().get(auctionId);
         AuctionSummary auctionSummary = closedAuction.getAuctionSummary();
         out.println(auctionSummary.summarize());
     }
 
     private void placeBid() {
-        out.println("\n" + auctionManager.getCurrentUser().getUsername());
+        out.println("\n" + currentUser.getUsername());
         out.print("Enter auction id: ");
         int auctionId = Integer.parseInt(scanner.nextLine());
 
-        if (auctionManager.isAuctionOwnedByCurrentUser(auctionId)) {
+        if (auctionManager.isAuctionOwnedByCurrentUser(auctionId, currentUser)) {
             out.println("Cannot place bid on your own auction. Please enter auction id of an auction you do not own.");
             out.print("Enter auction id: ");
             auctionId = Integer.parseInt(scanner.nextLine());
@@ -114,22 +116,22 @@ public class AuctionMenuManager {
 
 
     private void viewWonBids() {
-        auctionManager.getWonBids().stream().forEach(
+        auctionManager.getWonBids(currentUser).forEach(
                 bid -> out.println("\nAuctionLot: " + bid.getAuctionId() + " " + "Symbol: " + bid.getAuctionSymbol() + " " + "Quantity: " + bid.getQuantity() + " " + "Price: " + bid.getPrice())
         );
     }
 
     private void viewLostBids() {
-        auctionManager.getLostBids().stream().forEach(
+        auctionManager.getLostBids(currentUser).forEach(
                 bid -> out.println("\nAuctionLot: " + bid.getAuctionId() + " " + "Symbol: " + bid.getAuctionSymbol() + " " + "Quantity: " + bid.getQuantity() + " " + "Price: " + bid.getPrice())
         );
     }
 
     public void setCurrentUser(User currentUser) {
-        auctionManager.setCurrentUser(currentUser);
+        this.currentUser = currentUser;
     }
 
     public User getCurrentUser() {
-       return auctionManager.getCurrentUser();
+       return currentUser;
     }
 }

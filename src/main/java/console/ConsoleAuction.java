@@ -22,9 +22,7 @@ public class ConsoleAuction {
         User regularUser = new User(regularId, "testUser1", "Oliver", "Belanger", "password", "Organisation 2");
         userStore.addUser(adminUser);
         userStore.addUser(regularUser);
-        userStore.setCurrentUser(adminUser.getUsername());
-        User currentUser = userStore.getCurrentUser();
-        AuctionManager auctionManager = new AuctionManager(currentUser);
+        AuctionManager auctionManager = new AuctionManager();
         loginMenu = new LoginMenu(userStore, scanner, out, auctionManager);
     }
 

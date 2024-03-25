@@ -1,10 +1,10 @@
 package models;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Auction {
     private static int lastId = 0;
@@ -13,8 +13,6 @@ public class Auction {
     private final int quantity;
     private  final double minimumPrice;
     private boolean isOpen;
-
-    // use a different type
     private Instant closingTime;
     private final String owner;
     private final List<Bid> bids;
@@ -23,8 +21,9 @@ public class Auction {
     private final List<Bid> winningBids = new ArrayList<>();
     private double totalRevenue = 0;
     private int totalSoldQuantity = 0;
+    private final Clock clock;
 
-    public Auction(String symbol, int quantity, double minimumPrice, String owner) {
+    public Auction(String symbol, int quantity, double minimumPrice, String owner, Clock clock) {
         if (quantity < 0 || minimumPrice <= 0) throw new IllegalArgumentException("Invalid auction parameters.");
         this.id = ++lastId; // Increment and assign the next ID
         this.symbol = symbol;
@@ -33,6 +32,7 @@ public class Auction {
         this.owner = owner;
         this.isOpen = true;
         this.bids = new ArrayList<>();
+        this.clock = clock;
     }
 
     public String getSymbol() {
@@ -53,10 +53,6 @@ public class Auction {
 
     public double getTotalRevenue() {
         return totalRevenue;
-    }
-
-    public int getQuantity() {
-        return quantity;
     }
 
     public int getTotalSoldQuantity() {
@@ -80,18 +76,19 @@ public class Auction {
     }
 
     public void closeAuction() {
-        if (!this.isOpen) return;
+        if (!this.isOpen) return; // feedback to user
+        // business exception class
 
         this.isOpen = false;
-        this.closingTime = Instant.now();
+        this.closingTime = clock.instant();
 
         List<Bid> sortedBids = bids.stream()
-                .filter(bid -> bid.getPrice() >= this.minimumPrice)
+                .filter(bid -> bid.getPrice() >= minimumPrice)
                 .sorted(Comparator.comparing(Bid::getPrice).reversed()
                         .thenComparing(Bid::getSubmissionTime))
-                .collect(Collectors.toList());
+                .toList();
 
-        int remainingQuantity = this.quantity;
+        int remainingQuantity = quantity;
         for (Bid bid : sortedBids) {
             if (remainingQuantity == 0) break;
 
@@ -101,23 +98,22 @@ public class Auction {
                 totalSoldQuantity += bid.getQuantity();
                 remainingQuantity -= bid.getQuantity();
             } else {
-                winningBids.add(new Bid(bid.getBidder(), this.symbol, this.id, bid.getPrice(), remainingQuantity, bid.getSubmissionTime()));
+                winningBids.add(new Bid(bid.getBidder(), symbol, id, bid.getPrice(), remainingQuantity, bid.getSubmissionTime()));
                 totalRevenue += bid.getPrice() * remainingQuantity;
                 totalSoldQuantity += remainingQuantity;
                 remainingQuantity = 0;
             }
         }
 
-        this.setAuctionSummary(this.id, this.symbol, winningBids, totalRevenue, totalSoldQuantity);
 
-    }
-
-
-    private void setAuctionSummary(int id, String symbol, List<Bid> winningBids, double totalRevenue, int totalSoldQuantity) {
        this.auctionSummary = new AuctionSummary(id, symbol, winningBids, totalRevenue, totalSoldQuantity);
     }
 
     public AuctionSummary getAuctionSummary() {
         return this.auctionSummary;
+    }
+
+    public static void resetLastId() {
+        lastId = 0;
     }
 }

@@ -4,7 +4,6 @@ import java.util.*;
 
 public class UserStore {
     private static final Map<Integer, User> users = new HashMap<>();
-    private User currentUser;
 
     public User authenticateUser(String username, String password) {
 
@@ -26,17 +25,6 @@ public class UserStore {
 
         return null;
     }
-
-
-    public void setCurrentUser(String username) {
-        this.currentUser = this.findByUsername(username);
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-
 
     public boolean validateUsername(User user, String username) {
         return user.getUsername().equals(username);
@@ -69,7 +57,6 @@ public class UserStore {
 
        return uniqueOrganizations;
     }
-
 
    public Map<String, List<User>> getUsersByOrganisation() {
         Map<String, List<User>> organizationUsersMap = new HashMap<>();
