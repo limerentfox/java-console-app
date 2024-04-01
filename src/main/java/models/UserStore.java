@@ -6,7 +6,7 @@ public class UserStore {
     private static final Map<Integer, User> users = new HashMap<>();
 
     public User authenticateUser(String username, String password) throws BusinessException {
-        User currentUser = null;
+        User currentUser;
         for (User user : users.values()) {
             if (validateUsername(user, username) && validatePassword(user, password)) {
                 currentUser = user;
@@ -47,11 +47,6 @@ public class UserStore {
     public void addUser(User user) {
         users.put(user.getId(), user);
     }
-
-    public void removeUser(int userId) {
-        users.remove(userId);
-    }
-
 
     public Set<String> getUniqueOrganisations() {
         Set<String> uniqueOrganizations = new HashSet<>();
