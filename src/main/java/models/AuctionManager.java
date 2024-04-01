@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AuctionManager {
     private final Map<Integer, Auction> auctions = new HashMap<>();
@@ -60,17 +60,15 @@ public class AuctionManager {
 
 
 
-    // return type can be stream
-    public List<Bid> getWonBids(User currentUser) {
+
+    public Stream<Bid> getWonBids(User currentUser) {
         return allBids.stream()
-                .filter(bid -> bid.getBidder().equals(currentUser.getUsername()) && auctions.get(bid.getAuctionId()).getWinningBids().contains(bid))
-                .collect(Collectors.toList());
+                .filter(bid -> bid.getBidder().equals(currentUser.getUsername()) && auctions.get(bid.getAuctionId()).getWinningBids().contains(bid));
     }
 
-    public List<Bid> getLostBids(User currentUser) {
+    public Stream<Bid> getLostBids(User currentUser) {
         return allBids.stream()
-                .filter(bid -> bid.getBidder().equals(currentUser.getUsername()) && !auctions.get(bid.getAuctionId()).getWinningBids().contains(bid))
-                .collect(Collectors.toList());
+                .filter(bid -> bid.getBidder().equals(currentUser.getUsername()) && !auctions.get(bid.getAuctionId()).getWinningBids().contains(bid));
     }
 }
 

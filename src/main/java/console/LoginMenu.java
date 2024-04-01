@@ -60,7 +60,6 @@ public class LoginMenu {
             }
         } catch (BusinessException e) {
             out.println("Error logging in: " + e.getMessage());
-            return;
         }
     }
 
