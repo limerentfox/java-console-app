@@ -44,26 +44,23 @@ public class LoginMenu {
         out.print("Enter password: ");
         String password = scanner.nextLine();
 
-        out.println(username + password);
-        out.println(userStore.getAllUsers().values());
+        User currentUser;
 
+        try {
+            currentUser = userStore.authenticateUser(username, password);
+            auctionMenuManager.setCurrentUser(currentUser);
+            String banner = "===================================";
+            out.println(banner);
+            out.println("Welcome " + currentUser.getFullName());
 
-        User currentUser = userStore.authenticateUser(username, password);
-        auctionMenuManager.setCurrentUser(currentUser);
-
-        if (currentUser == null) {
-            out.println("Username or password does not match our records. Please try again.");
+            if (currentUser.getIsAdmin()) {
+                this.showAdminMenu();
+            } else {
+                this.showUserMenu();
+            }
+        } catch (BusinessException e) {
+            out.println("Error logging in: " + e.getMessage());
             return;
-        }
-
-        String banner = "===================================";
-        out.println(banner);
-        out.println("Welcome " + currentUser.getFullName());
-
-        if (currentUser.getIsAdmin()) {
-            this.showAdminMenu();
-        } else {
-            this.showUserMenu();
         }
     }
 

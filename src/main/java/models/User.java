@@ -10,14 +10,14 @@ public class User {
     private final Boolean isAdmin;
     private Boolean isBlocked;
 
-    public User (int id, String username, String firstName, String lastName, String password, String organisation) {
+    public User (int id, String username, String firstName, String lastName, String password, String organisation, boolean isAdmin) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.organisation = organisation;
         this.id = id;
-        this.isAdmin = organisation.equalsIgnoreCase("admin");
+        this.isAdmin = isAdmin;
         this.isBlocked = false;
     }
 

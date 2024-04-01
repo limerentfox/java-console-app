@@ -16,19 +16,20 @@ public class AuctionManager {
     public AuctionManager() {
     }
 
-    public List<Bid> getAllBids() {
-        return allBids;
-    }
-
     public boolean isAuctionOwnedByCurrentUser(int auctionId, User currentUser) {
         Auction auction = auctions.get(auctionId);
         return auction != null && auction.getOwner().equals(currentUser.getUsername());
     }
     public void createAuction(String symbol, int quantity, double minimumPrice, User currentUser) {
-        Clock clock = Clock.systemDefaultZone();
-        Auction newAuction = new Auction(symbol, quantity, minimumPrice, currentUser.getUsername(), clock);
-        Integer auctionId = newAuction.getId();
-        auctions.put(auctionId, newAuction);
+        try {
+            Clock clock = Clock.systemDefaultZone();
+            Auction newAuction = new Auction(symbol, quantity, minimumPrice, currentUser.getUsername(), clock);
+            Integer auctionId = newAuction.getId();
+            auctions.put(auctionId, newAuction);
+        } catch (BusinessException e) {
+            System.err.println("Error creating new auction: " + e.getMessage());
+        }
+
     }
 
     public Map<Integer, Auction> getAuctions() {
@@ -46,9 +47,14 @@ public class AuctionManager {
     public void placeBid(String bidder, String auctionSymbol, int auctionId, double price, int quantity) {
         Auction auction = auctions.get(auctionId);
         if (auction != null && auction.isOpen() && !auction.getOwner().equals(bidder)) {
-            Bid newBid = new Bid(bidder, auctionSymbol, auctionId, price, quantity, Instant.now());
-            auction.getBids().add(newBid);
-            allBids.add(newBid);
+            try {
+                Bid newBid = new Bid(bidder, auctionSymbol, auctionId, price, quantity, Instant.now());
+                auction.getBids().add(newBid);
+                allBids.add(newBid);
+            } catch (BusinessException e) {
+                System.err.println("Error creating new bid: " + e.getMessage());
+            }
+
         }
     }
 

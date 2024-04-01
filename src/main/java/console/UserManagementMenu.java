@@ -1,5 +1,6 @@
 package console;
 
+import models.BusinessException;
 import models.User;
 import models.UserIdGenerator;
 import models.UserStore;
@@ -73,7 +74,9 @@ public class UserManagementMenu {
         out.print("Enter organisation: ");
         String organisation = scanner.nextLine();
         int id = UserIdGenerator.generateUserId();
-        User newUser = new User(id, username, firstName, lastName, password, organisation);
+        out.print("Enter if user is an admin: ");
+        boolean isAdmin = scanner.hasNextBoolean();
+        User newUser = new User(id, username, firstName, lastName, password, organisation, isAdmin);
         userStore.addUser(newUser);
         out.println("User created successfully.");
     }
@@ -81,17 +84,26 @@ public class UserManagementMenu {
     private void blockUser() {
         out.print("Enter username of user to block: ");
         String username = scanner.nextLine();
-        User userToBeBlocked = userStore.findByUsername(username);
-        userToBeBlocked.setIsBlocked(true);
-        out.println("User blocked successfully.");
+        try {
+            User userToBeBlocked = userStore.findByUsername(username);
+            userToBeBlocked.setIsBlocked(true);
+            out.println("User blocked successfully.");
+        } catch (BusinessException e) {
+            out.println("Error blocking user: " + e.getMessage());
+        }
     }
 
     private void unblockUser() {
         out.print("Enter username of user to unblock: ");
         String username = scanner.nextLine();
-        User userToBeUnblocked = userStore.findByUsername(username);
-        userToBeUnblocked.setIsBlocked(false);
-        out.println("User unblocked successfully.");
+        try {
+            User userToBeUnblocked = userStore.findByUsername(username);
+            userToBeUnblocked.setIsBlocked(false);
+            out.println("User unblocked successfully.");
+        } catch (BusinessException e) {
+            out.println("Error unblocking user: " + e.getMessage());
+        }
+
     }
 
 

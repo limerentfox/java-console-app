@@ -18,8 +18,8 @@ public class ConsoleAuction {
         int adminId = UserIdGenerator.generateUserId();
         int regularId = UserIdGenerator.generateUserId();
 
-        User adminUser = new User(adminId, "admin", "Christi", "Reid", "password", "admin");
-        User regularUser = new User(regularId, "testUser1", "Oliver", "Belanger", "password", "Organisation 2");
+        User adminUser = new User(adminId, "admin", "Christi", "Reid", "password", "admin", true);
+        User regularUser = new User(regularId, "testUser1", "Oliver", "Belanger", "password", "Organisation 2", false);
         userStore.addUser(adminUser);
         userStore.addUser(regularUser);
         AuctionManager auctionManager = new AuctionManager();
