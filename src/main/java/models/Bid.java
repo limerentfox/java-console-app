@@ -11,8 +11,15 @@ public class Bid {
     private final int quantity;
     private final Instant submissionTime;
 
-    public Bid(String bidder, String auctionSymbol, int auctionId, double price, int quantity, Instant submissionTime) {
-        if (price <= 0 || quantity <= 0) throw new IllegalArgumentException("Invalid bid parameters.");
+    public Bid(String bidder, String auctionSymbol, int auctionId, double price, int quantity, Instant submissionTime) throws BusinessException {
+        if (price <= 0) {
+            throw new BusinessException("Price cannot be zero or negative.", BusinessException.ErrorCode.INVALID_INPUT);
+        }
+
+        if (quantity <= 0) {
+            throw new BusinessException("Quantity cannot be zero or negative.", BusinessException.ErrorCode.INVALID_INPUT);
+        }
+
         this.bidder = bidder;
         this.auctionSymbol = auctionSymbol;
         this.price = price;

@@ -23,8 +23,14 @@ public class Auction {
     private int totalSoldQuantity = 0;
     private final Clock clock;
 
-    public Auction(String symbol, int quantity, double minimumPrice, String owner, Clock clock) {
-        if (quantity < 0 || minimumPrice <= 0) throw new IllegalArgumentException("Invalid auction parameters.");
+    public Auction(String symbol, int quantity, double minimumPrice, String owner, Clock clock) throws BusinessException {
+        if (minimumPrice <= 0) {
+            throw new BusinessException("Minimum cannot be zero or negative.", BusinessException.ErrorCode.INVALID_INPUT);
+        }
+        if (quantity < 0) {
+            throw new BusinessException("Quantity cannot be negative.", BusinessException.ErrorCode.INVALID_INPUT);
+        }
+
         this.id = ++lastId; // Increment and assign the next ID
         this.symbol = symbol;
         this.quantity = quantity;
@@ -98,7 +104,12 @@ public class Auction {
                 totalSoldQuantity += bid.getQuantity();
                 remainingQuantity -= bid.getQuantity();
             } else {
-                winningBids.add(new Bid(bid.getBidder(), symbol, id, bid.getPrice(), remainingQuantity, bid.getSubmissionTime()));
+                try {
+                    Bid newBid = new Bid(bid.getBidder(), symbol, id, bid.getPrice(), remainingQuantity, bid.getSubmissionTime());
+                    winningBids.add(newBid);
+                } catch (BusinessException e) {
+                    System.err.println("Error creating partial bid: " + e.getMessage());
+                }
                 totalRevenue += bid.getPrice() * remainingQuantity;
                 totalSoldQuantity += remainingQuantity;
                 remainingQuantity = 0;

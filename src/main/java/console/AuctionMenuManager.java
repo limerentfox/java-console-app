@@ -1,7 +1,9 @@
 package console;
 
 import models.*;
+
 import java.io.PrintStream;
+import java.util.List;
 import java.util.Scanner;
 
 public class AuctionMenuManager {
@@ -90,7 +92,16 @@ public class AuctionMenuManager {
         auctionManager.closeAuction(auctionId, currentUser);
         Auction closedAuction = auctionManager.getAuctions().get(auctionId);
         AuctionSummary auctionSummary = closedAuction.getAuctionSummary();
-        out.println(auctionSummary.summarize());
+        out.println("Auction ID: " + auctionSummary.auctionId());
+        out.println("\nSymbol: " + auctionSummary.symbol());
+        out.printf("\nTotal Revenue: $%.2f", auctionSummary.totalRevenue());
+        out.println("\nTotal Sold Quantity: " + auctionSummary.totalSoldQuantity());
+        out.println("\nWinning Bids:\n");
+        List<Bid> wonBids = auctionSummary.winningBids();
+        for (Bid bid: wonBids) {
+            out.printf("User: %s Quantity: %d, Price: $%.2f", bid.getBidder(), bid.getQuantity(), bid.getPrice());
+        }
+
     }
 
     private void placeBid() {
@@ -110,7 +121,6 @@ public class AuctionMenuManager {
         double price = Double.parseDouble(scanner.nextLine());
         out.print("Enter quantity: ");
         int quantity = Integer.parseInt(scanner.nextLine());
-
         auctionManager.placeBid(getCurrentUser().getUsername(), auctionSymbol,auctionId, price, quantity);
     }
 

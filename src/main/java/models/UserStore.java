@@ -5,27 +5,34 @@ import java.util.*;
 public class UserStore {
     private static final Map<Integer, User> users = new HashMap<>();
 
-    public User authenticateUser(String username, String password) {
-
+    public User authenticateUser(String username, String password) throws BusinessException {
+        User currentUser;
         for (User user : users.values()) {
-            if (this.validateUsername(user, username) && this.validatePassword(user, password)) {
-                return user;
+            if (validateUsername(user, username) && validatePassword(user, password)) {
+                currentUser = user;
+            } else {
+                throw new BusinessException("Username or password does not match our records. Please try again.", BusinessException.ErrorCode.USER_NOT_FOUND);
+            }
+
+            if (!validateUserIsNotBlocked(user, user.getIsBlocked())) {
+                return currentUser;
             }
         }
 
-        return null;
+        throw new BusinessException("User is showing as blocked in our records. Please contact your admin for assistance.", BusinessException.ErrorCode.GENERAL);
     }
 
-    public User findByUsername(String username) {
+    public User findByUsername(String username) throws BusinessException {
         for (User user : users.values()) {
             if (this.validateUsername(user, username)) {
                 return user;
             }
         }
 
-        return null;
+        throw new BusinessException("No user exists in our records with that username. Please try again.", BusinessException.ErrorCode.USER_NOT_FOUND);
     }
 
+    public boolean validateUserIsNotBlocked(User user, boolean isBlocked) { return user.getIsBlocked().equals(isBlocked); }
     public boolean validateUsername(User user, String username) {
         return user.getUsername().equals(username);
     }
@@ -40,11 +47,6 @@ public class UserStore {
     public void addUser(User user) {
         users.put(user.getId(), user);
     }
-
-    public void removeUser(int userId) {
-        users.remove(userId);
-    }
-
 
     public Set<String> getUniqueOrganisations() {
         Set<String> uniqueOrganizations = new HashSet<>();
