@@ -1,5 +1,4 @@
-package console;
-
+import console.AuctionMenuManager;
 import models.AuctionManager;
 import models.BusinessException;
 import models.User;
@@ -36,7 +35,6 @@ class AuctionMenuManagerTest {
         originalOut = System.out;
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
-        // Assume currentUser is properly initialized
     }
 
     @AfterEach
@@ -65,7 +63,6 @@ class AuctionMenuManagerTest {
         String input = "2\n7\n"; // Sequence to view auctions and exit
         setupMenuManagerWithInput(input);
 
-        // Setup mock to return a predefined list of auctions
         when(auctionManager.getAuctions()).thenReturn(Map.of(
                 1, new Auction("Art", 10, 100.0, currentUser.getUsername(), Clock.systemDefaultZone())
         ));
@@ -82,15 +79,12 @@ class AuctionMenuManagerTest {
         String input = "4\n1\nArt\n50.0\n2\n7\n"; // Sequence to place a bid and exit
         setupMenuManagerWithInput(input);
 
-        // Prevent placing a bid on own auction
         when(auctionManager.isAuctionOwnedByCurrentUser(anyInt(), eq(currentUser))).thenReturn(false);
 
         auctionMenuManager.displayAuctionMenu();
 
         verify(auctionManager, times(1)).placeBid(eq(currentUser.getUsername()), anyString(), anyInt(), anyDouble(), anyInt());
     }
-
-    // Note: Implement testViewWonBids() and testViewLostBids() similarly, ensuring the mock setup matches the expected behavior.
 
     private static class Auction extends models.Auction {
         public Auction(String symbol, int quantity, double minimumPrice, String owner, Clock clock) throws BusinessException {
